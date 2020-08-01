@@ -8,6 +8,7 @@ export const LIST_TIMERS = gql`
       id
       title
       project
+      status
       # clock {
       #   isRunning
       #   elapsed
@@ -22,6 +23,7 @@ export const CREATE_TIMER = gql`
       id
       title
       project
+      status
     }
   }
 `;
@@ -32,6 +34,7 @@ export const UPDATE_TIMER = gql`
       id
       title
       project
+      status
       # clock {
       #   id
       #   isRunning
@@ -59,6 +62,8 @@ export const DELETE_TIMER = gql`
   mutation DeleteTimer($id: ID!) {
     deleteTimer(id: $id) {
       id
+      title
+      project
       status
     }
   }

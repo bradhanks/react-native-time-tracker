@@ -13,20 +13,7 @@ export const Timer = ({
   // isRunning,
 }) => {
   //const elapsedString = millisecondsToHuman(elapsed);
-  const [deleteTimer, { data }] = useMutation(DELETE_TIMER, {
-    variables: { id: id },
-    update(cache) {
-      const { timers } = cache.readQuery({
-        query: LIST_TIMERS,
-      });
-      cache.writeQuery({
-        query: LIST_TIMERS,
-        data: {
-          timers: timers.filter((timer) => timer.status == "active"),
-        },
-      });
-    },
-  });
+  const [deleteTimer] = useMutation(DELETE_TIMER);
 
   return (
     <View style={styles.timerContainer}>
@@ -36,7 +23,23 @@ export const Timer = ({
       <View style={styles.buttonGroup}>
         <TimerButton onPress={onEditPress} color="blue" small title="Edit" />
 
-        <TimerButton onPress={deleteTimer} color="blue" small title="Remove" />
+        <TimerButton
+          onPress={() => {
+            deleteTimer({
+              variables: { id },
+              update: (cache) => {
+                const data = cache.readQuery({ query: LIST_TIMERS });
+                data.timers = data.timers.filter(
+                  ({ status: status }) => status != "deleted"
+                );
+                cache.writeQuery({ query: LIST_TIMERS }, data);
+              },
+            });
+          }}
+          color="blue"
+          small
+          title="Remove"
+        />
       </View>
       <TimerButton
         onPress={onEditPress}
