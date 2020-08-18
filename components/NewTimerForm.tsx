@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { updateApolloCache } from "../graphql/helperFunctions";
-import { CREATE_TIMER } from "../graphql/timerQueries";
+import { LIST_TIMERS } from "../graphql/query/timer";
+import { CREATE_TIMER } from "../graphql/mutation/timer";
 import { TimerButton } from "./TimerButton";
 
 // interface AllProp {
@@ -60,8 +60,17 @@ export default function NewTimerForm({ onCreatePress, onCancel }): JSX.Element {
           onPress={() => {
             createTimer({
               variables: mutationVars,
-              update: (cache, { data }) => updateApolloCache(cache, data),
-            });
+              update: (cache, { data }) => {
+                return cache.writeQuery({
+                  query: LIST_TIMERS,
+                  data: {
+                    timers: [
+                      ...cache.readQuery({ query: LIST_TIMERS, variables : {status: "active"} })!.timers,
+                      data!.createTimer,
+                    ],
+                  },
+                });
+              }});
             //setTimerFormTitle("");
             //setTimerFormProject("");
             onCreatePress();

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import EditableTimer from "./components/EditableTimer";
 import ToggleableTimerForm from "./components/ToggleableTimerForm";
-import { LIST_TIMERS } from "./graphql/timerQueries";
+import { LIST_TIMERS } from "./graphql/query/timer";
 
 export const App = () => {
   const [matching, setMatching] = useState(undefined);

@@ -1,7 +1,9 @@
 import { useMutation } from "@apollo/client";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { DELETE_TIMER, LIST_TIMERS } from "../graphql/timerQueries";
+import { LIST_TIMERS } from "../graphql/query/timer";
+import { DELETE_TIMER } from "../graphql/mutation/timer";
+
 import { TimerButton } from "./TimerButton";
 
 export const Timer = ({

@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { UPDATE_TIMER } from "../graphql/timerQueries";
+import { UPDATE_TIMER } from "../graphql/mutation/timer";
 import { TimerButton } from "./TimerButton";
 
 type submitText = "Update" | "Create";
