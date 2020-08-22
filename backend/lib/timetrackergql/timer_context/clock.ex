@@ -14,10 +14,9 @@ defmodule Timetrackergql.TimerContext.Clock do
 
    @doc false
    def changeset(clock, attrs) do
-    clock
-    |> cast(attrs, [:elapsed, :isRunning])
-    |> foreign_key_constraint(:timer_id, [name: "FKconstraint"])
-  #  |> validate_required([:elapsed, :isRunning])
+    cast(clock, attrs, [:timer_id])
+    |> validate_required([:elapsed, :isRunning])
+    |> assoc_constraint(:timer)
   end
 
 

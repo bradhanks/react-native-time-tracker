@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, Alert } from "react-native";
 import { LIST_TIMERS } from "../graphql/query/timer";
 import { CREATE_TIMER } from "../graphql/mutation/timer";
 import { TimerButton } from "./TimerButton";
@@ -19,13 +19,39 @@ export default function NewTimerForm({ onCreatePress, onCancel }): JSX.Element {
   const [timerFormTitle, setTimerFormTitle] = useState(" ");
   const [timerFormProject, setTimerFormProject] = useState(" ");
 
-  // Apollo hook
-  const [createTimer, { loading, error }] = useMutation(CREATE_TIMER);
-
   const mutationVars = {
     project: timerFormProject,
     title: timerFormTitle,
+    status: "active",
   };
+
+  // Apollo hook
+  const [createTimer] = useMutation(CREATE_TIMER, {
+    variables: mutationVars,
+    update: (cache, { data }) => {
+      return cache.writeQuery({
+        query: LIST_TIMERS,
+        variables: {status: "active"},
+        data: {
+          timers: [
+            ...cache.readQuery({ query: LIST_TIMERS, variables : {status: "active"} })!.timers,
+            data!.createTimer,
+          ],
+        },
+      });
+    },
+  });
+
+  // validation
+  const Validate = {
+    minimum:
+    function (hookVariable, count) {
+    if (hookVariable.length < count) {
+        Alert.alert('Alert', `${hookVariable} must be minimum ${count} characters`);
+    }
+    //Do your stuff if condition meet.
+  },
+};
 
   return (
     <View style={styles.formContainer}>
@@ -58,21 +84,23 @@ export default function NewTimerForm({ onCreatePress, onCancel }): JSX.Element {
           color="#21BA45"
           title="Submit"
           onPress={() => {
-            createTimer({
-              variables: mutationVars,
-              update: (cache, { data }) => {
-                return cache.writeQuery({
-                  query: LIST_TIMERS,
-                  data: {
-                    timers: [
-                      ...cache.readQuery({ query: LIST_TIMERS, variables : {status: "active"} })!.timers,
-                      data!.createTimer,
-                    ],
-                  },
-                });
-              }});
-            //setTimerFormTitle("");
-            //setTimerFormProject("");
+            createTimer();
+            Validate.minimum(timerFormTitle, 8);
+            //   {
+            //   variables: mutationVars,
+            //   update: (cache, { data }) => {
+            //     return cache.writeQuery({
+            //       query: LIST_TIMERS,
+            //       data: {
+            //         timers: [
+            //           ...cache.readQuery({ query: LIST_TIMERS, variables : {status: "active"} })!.timers,
+            //           data!.createTimer,
+            //         ],
+            //       },
+            //     });
+            //   }});
+            // //setTimerFormTitle("");
+            // //setTimerFormProject("");
             onCreatePress();
           }}
         />

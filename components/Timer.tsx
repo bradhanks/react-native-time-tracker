@@ -15,16 +15,19 @@ export const Timer = ({
   // isRunning,
 }) => {
   //const elapsedString = millisecondsToHuman(elapsed);
-  const [deleteTimer, { data }] = useMutation(DELETE_TIMER, {
-    variables: { id: id },
+  const [deleteTimer] = useMutation(DELETE_TIMER, {
+    variables: { id },
     update(cache) {
       const { timers } = cache.readQuery({
         query: LIST_TIMERS,
+        variables: {status: "active"},
       });
+      const newTimers = timers.filter(timer => (timer.id !== id));
       cache.writeQuery({
         query: LIST_TIMERS,
+        variables: {status: "active"},
         data: {
-          timers: timers.filter((timer) => timer.status == "active"),
+          timers: newTimers
         },
       });
     },

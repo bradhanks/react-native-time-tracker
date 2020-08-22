@@ -14,7 +14,7 @@ import { LIST_TIMERS } from "./graphql/query/timer";
 
 export const App = () => {
   const [matching, setMatching] = useState(undefined);
-  const [status, setStatus] = useState(undefined);
+  const [status, setStatus] = useState("active");
   const [elapsed, setElapsed] = useState(undefined);
 
   //const [status, setStatus] = useState("");

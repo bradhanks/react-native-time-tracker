@@ -13,8 +13,8 @@ defmodule Timetrackergql.TimerContext.Timer do
 
   @doc false
   def changeset(timer, attrs) do
-    timer
-    |> cast(attrs, [:title, :project, :status])
+    cast(timer, attrs, [:timer_id])
+    |> foreign_key_constraint(:timer_id)
   #  |> validate_required([:title, :project, :status])
   end
 end

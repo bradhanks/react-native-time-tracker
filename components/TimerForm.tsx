@@ -21,7 +21,7 @@ function TimerForm({ id, title, project, onCancel, onEditPress }): JSX.Element {
   const [timerFormProject, setTimerFormProject] = useState(project);
 
   // Apollo hook
-  const [updateTimer, { loading, error }] = useMutation(UPDATE_TIMER);
+  const [updateTimer] = useMutation(UPDATE_TIMER);
 
   const mutationVars = {
     id: id,
